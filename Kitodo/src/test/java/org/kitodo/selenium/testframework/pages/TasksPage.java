@@ -57,6 +57,7 @@ public class TasksPage extends Page<TasksPage> {
      */
     @Override
     public TasksPage goTo() throws Exception {
+        System.out.println("going to taskpage");
         Pages.getTopNavigation().gotoTasks();
         await("Wait for execution of link click").pollDelay(Browser.getDelayMinAfterLinkClick(), TimeUnit.MILLISECONDS)
                 .atMost(Browser.getDelayMaxAfterLinkClick(), TimeUnit.MILLISECONDS).ignoreExceptions()
@@ -93,15 +94,21 @@ public class TasksPage extends Page<TasksPage> {
 
     public void editOwnedTask(String taskTitle, String processTitle) throws Exception {
         if (isNotAt()) {
+            System.out.println("isNotAt in TaskPage 97");
             goTo();
         }
         setEditTaskLink(taskTitle, processTitle);
+        System.out.println("trying to click editTaskLink");
         editTaskLink.click();
     }
 
     private void setEditTaskLink(String taskTitle, String processTitle) {
+        System.out.println("setEditTaskLink in TaskPage 105");
         int index = getRowIndexForTask(taskTable, taskTitle, processTitle);
-        editTaskLink = Browser.getDriver().findElementById(TASK_TABLE + ":" + index + ":editOwnTask");
+        System.out.println("rowindex for task: " + index);
+        String idOfOwnedTask = TASK_TABLE + ":" + index + ":editOwnTask";
+        System.out.println("idOfOwnedTask in html " + idOfOwnedTask);
+        editTaskLink = Browser.getDriver().findElementById(idOfOwnedTask);
     }
 
     private void setTakeTaskLink(String taskTitle, String processTitle) {
