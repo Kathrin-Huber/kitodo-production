@@ -18,6 +18,7 @@ import java.io.File;
 import java.net.URI;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -33,6 +34,10 @@ import org.kitodo.api.dataformat.Workpiece;
 import org.kitodo.config.ConfigCore;
 import org.kitodo.config.enums.ParameterCore;
 import org.kitodo.data.database.beans.Process;
+import org.kitodo.data.database.exceptions.DAOException;
+import org.kitodo.data.exceptions.DataException;
+import org.kitodo.production.dto.ProcessDTO;
+import org.kitodo.production.forms.ProcessForm;
 import org.kitodo.production.forms.createprocess.CreateProcessForm;
 import org.kitodo.production.helper.TempProcess;
 import org.kitodo.production.services.ServiceManager;
@@ -99,4 +104,33 @@ public class CreateProcessFormIT {
         processService.remove(processId);
         fileService.delete(URI.create(processId.toString()));
     }
+
+    @Test
+    public void testDeletion() throws DataException, DAOException {
+
+        List<ProcessDTO> all = processService.findAll();
+
+        Process parent  = new Process();
+        parent.setTitle("parent");
+        parent.setTemplate(ServiceManager.getTemplateService().getById(1));
+        parent.setProject(ServiceManager.getProjectService().getById(1));
+        processService.save(parent);
+
+        Process child = new Process();
+        child.setParent(parent);
+        child.setTitle("child");
+        child.setTemplate(ServiceManager.getTemplateService().getById(1));
+        child.setProject(ServiceManager.getProjectService().getById(1));
+        processService.save(child);
+        parent.getChildren().add(child);
+        processService.save(parent);
+        all = processService.findAll();
+        ProcessForm form = new ProcessForm();
+        form.setProcess(parent);
+        form.deleteWithChildren();
+
+        all = processService.findAll();
+
+    }
+
 }

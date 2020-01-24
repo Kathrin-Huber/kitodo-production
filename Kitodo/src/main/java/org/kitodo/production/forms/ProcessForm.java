@@ -199,6 +199,16 @@ public class ProcessForm extends TemplateBaseForm {
         return this.stayOnCurrentPage;
     }
 
+    public void delete(ProcessDTO processDTO){
+        try {
+            this.process = ServiceManager.getProcessService().getById(processDTO.getId());
+        } catch (DAOException e) {
+            Helper.setErrorMessage(ERROR_DELETING, new Object[] {ObjectType.PROCESS.getTranslationSingular() }, logger,
+                    e);
+        }
+        delete();
+    }
+
     /**
      * Delete process.
      */
@@ -214,11 +224,8 @@ public class ProcessForm extends TemplateBaseForm {
      * Delete with children processes.
      */
     public void deleteWithChildren() {
-        List<Process> children = new CopyOnWriteArrayList<>(this.process.getChildren());
-        this.process.getChildren().clear();
-
+        List<Process> children = new ArrayList<>(this.process.getChildren());
         for (Process child : children) {
-            child.setParent(null);
             deleteProcess(child);
         }
 
@@ -305,6 +312,11 @@ public class ProcessForm extends TemplateBaseForm {
                 batch.getProcesses().remove(processToDelete);
                 processToDelete.getBatches().remove(batch);
                 ServiceManager.getBatchService().save(batch);
+            }
+            Process parent = processToDelete.getParent();
+            if (Objects.nonNull(parent)) {
+                parent.getChildren().remove(processToDelete);
+                ServiceManager.getProcessService().save(parent);
             }
             ServiceManager.getProcessService().remove(processToDelete);
         } catch (DataException e) {
