@@ -141,11 +141,17 @@ public class SchemaService {
                     if(folder.getFileGroup().equals(mediaFileForMediaVariant.getKey().getUse())){
                         int lastSeparator = mediaFileForMediaVariant.getValue().toString().lastIndexOf("/");
                         String lastSegment = mediaFileForMediaVariant.getValue().toString().substring(lastSeparator + 1);
-                        mediaFileForMediaVariant.setValue(new URI(folder.getUrlStructure() + lastSegment));
+                        mediaFileForMediaVariant.setValue(new URI(replacePlaceholder(folder.getUrlStructure() + lastSegment,process)));
                     }
                 }
             }
         }
+    }
+
+    private String replacePlaceholder(String uri, Process process) {
+        uri = uri.replaceAll("\\(processtitle\\)", process.getTitle());
+        uri = uri.replaceAll("\\(processid\\)", process.getId().toString());
+        return uri;
     }
 
     /**
