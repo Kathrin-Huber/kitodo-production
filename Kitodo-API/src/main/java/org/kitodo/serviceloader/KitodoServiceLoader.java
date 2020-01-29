@@ -199,7 +199,7 @@ public class KitodoServiceLoader<T> {
                             FacesContext facesContext = FacesContext.getCurrentInstance();
                             HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
 
-                            String filePath = session.getServletContext().getRealPath(File.separator + PAGES_FOLDER)
+                            String filePath = session.getServletContext().getRealPath("/" + PAGES_FOLDER)
                                     + File.separator + moduleName;
                             FileUtils.deleteDirectory(new File(filePath));
 

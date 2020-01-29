@@ -720,7 +720,7 @@ public class FileService {
         String directoryPath = temporaryFile.getParentFile().getPath();
         String temporaryFileName = TEMPORARY_FILENAME_PREFIX + temporaryFile.getName();
 
-        return directoryPath + File.separator + temporaryFileName;
+        return directoryPath + "/" + temporaryFileName;
     }
 
     /**

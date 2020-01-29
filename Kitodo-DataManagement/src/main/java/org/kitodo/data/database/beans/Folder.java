@@ -300,7 +300,7 @@ public class Folder extends BaseBean {
      */
     @Transient
     public String getRelativePath() {
-        int lastDelimiter = path.lastIndexOf(File.separatorChar);
+        int lastDelimiter = path.lastIndexOf("/");
         if (path.indexOf('*', lastDelimiter + 1) > -1) {
             return lastDelimiter >= 0 ? path.substring(0, lastDelimiter) : "";
         }

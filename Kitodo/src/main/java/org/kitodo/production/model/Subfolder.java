@@ -169,7 +169,7 @@ public class Subfolder {
      *         searched and a pattern to which the file names must correspond
      */
     private Pair<URI, Pattern> determineDirectoryAndFileNamePattern() {
-        int lastSeparator = folder.getPath().lastIndexOf(File.separatorChar);
+        int lastSeparator = folder.getPath().lastIndexOf("/");
         String lastSegment = folder.getPath().substring(lastSeparator + 1);
         int firstStar = lastSegment.indexOf('*');
         if (firstStar == -1) {
@@ -227,7 +227,7 @@ public class Subfolder {
      */
     public String getRelativeDirectoryPath() {
         String pathWithVariables = folder.getPath();
-        int lastSeparator = pathWithVariables.lastIndexOf(File.separatorChar);
+        int lastSeparator = pathWithVariables.lastIndexOf("/");
         if (pathWithVariables.indexOf('*', lastSeparator) > -1) {
             pathWithVariables = pathWithVariables.substring(0, lastSeparator);
         }
@@ -246,7 +246,7 @@ public class Subfolder {
      * @return composed URI
      */
     public URI getUri(String canonical) {
-        int lastSeparator = folder.getPath().lastIndexOf(File.separatorChar);
+        int lastSeparator = folder.getPath().lastIndexOf("/");
         String lastSegment = folder.getPath().substring(lastSeparator + 1);
         String processId = process.getId().toString();
         if (lastSegment.indexOf('*') == -1) {

@@ -19,6 +19,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -115,7 +116,12 @@ public class ExportMets {
             throws IOException, DAOException {
 
         Workpiece workpiece = gdzfile.getWorkpiece();
-        ServiceManager.getSchemaService().tempConvert(workpiece, this, this.myPrefs, process);
+        try {
+            workpiece = ServiceManager.getSchemaService().tempConvert(workpiece, this, this.myPrefs, process);
+        } catch (URISyntaxException e) {
+            Helper.setErrorMessage("Writing Mets file failed!", e.getLocalizedMessage(), logger, e);
+            return false;
+        }
         /*
          * We write to the user’s home directory or to the hotfolder here, not
          * to a content repository, therefore no use of file service.
@@ -130,8 +136,8 @@ public class ExportMets {
                         String message = Helper.getTranslation("xsltFileNotFound", Arrays.asList(xslFile.toString()));
                         throw new FileNotFoundException(message);
                     }
-                    bufferedOutputStream.write(XsltHelper.transformXmlByXslt(source, xslFile).toByteArray());
-                } catch (FileNotFoundException | TransformerException e) {
+                    bufferedOutputStream.write(out.toByteArray());
+                } catch (FileNotFoundException e) {
                     Helper.setErrorMessage("Writing Mets file failed!", e.getLocalizedMessage(), logger, e);
                     return false;
                 }

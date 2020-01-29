@@ -173,7 +173,7 @@ public class ExportDms extends ExportMets {
             // if necessary, create process folder
             if (process.getProject().isDmsImportCreateProcessFolder()) {
                 URI userHomeProcess = fileService.createResource(userHome,
-                    File.separator + Helper.getNormalizedTitle(process.getTitle()));
+                        "/" + Helper.getNormalizedTitle(process.getTitle()));
                 destination = userHomeProcess;
                 boolean createProcessFolderResult = createProcessFolder(userHomeProcess, userHome, process.getTitle());
                 if (!createProcessFolderResult) {
@@ -305,15 +305,15 @@ public class ExportDms extends ExportMets {
         }
         if (MetadataFormat.findFileFormatsHelperByName(fileFormat) == MetadataFormat.METS) {
             // if METS, then write by writeMetsFile...
-            writeMetsFile(process, fileService.createResource(userHome, File.separator + atsPpnBand + ".xml"), gdzfile);
+            writeMetsFile(process, fileService.createResource(userHome, "/" + atsPpnBand + ".xml"), gdzfile);
         } else {
             // ...if not, just write a fileformat
-            gdzfile.write(userHome + File.separator + atsPpnBand + ".xml");
+            gdzfile.write(userHome + "/" + atsPpnBand + ".xml");
         }
 
         // if necessary, METS and RDF should be written in the export
         if (MetadataFormat.findFileFormatsHelperByName(fileFormat) == MetadataFormat.METS_AND_RDF) {
-            writeMetsFile(process, fileService.createResource(userHome, File.separator + atsPpnBand + ".mets.xml"),
+            writeMetsFile(process, fileService.createResource(userHome, "/" + atsPpnBand + ".mets.xml"),
                 gdzfile);
         }
 
@@ -449,7 +449,7 @@ public class ExportDms extends ExportMets {
         VariableReplacer variableReplacer = new VariableReplacer(null, null, process, null);
 
         for (Subfolder processDir : processDirs) {
-            URI dstDir = new URI(destination.toString() + File.separator
+            URI dstDir = new URI(destination.toString() + "/"
                     + variableReplacer.replace(processDir.getFolder().getRelativePath()));
             fileService.createDirectories(dstDir);
 
