@@ -104,6 +104,7 @@ public class TopNavigationPage extends Page<TopNavigationPage> {
      * Hovers user menu and logs out.
      */
     public void logout() throws Exception {
+        System.out.println("logging out");
         await("Wait for visible user menu button").atMost(20, TimeUnit.SECONDS).ignoreExceptions()
                 .untilTrue(new AtomicBoolean(userMenuButton.isDisplayed()));
         RemoteWebDriver driver = Browser.getDriver();

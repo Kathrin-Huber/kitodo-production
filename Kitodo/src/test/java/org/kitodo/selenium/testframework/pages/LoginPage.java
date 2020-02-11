@@ -49,6 +49,7 @@ public class LoginPage extends Page<LoginPage> {
     }
 
     public void performLogin(User user) throws InterruptedException {
+        System.out.println("loginUser");
         SecurityPasswordEncoder passwordEncoder = new SecurityPasswordEncoder();
         String password = passwordEncoder.decrypt(user.getPassword());
 
@@ -63,6 +64,7 @@ public class LoginPage extends Page<LoginPage> {
     }
 
     public void performLoginAsAdmin() throws InterruptedException, DAOException {
+        System.out.println("login admin");
         performLogin(ServiceManager.getUserService().getById(1));
     }
 }

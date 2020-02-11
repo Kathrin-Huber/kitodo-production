@@ -39,20 +39,16 @@ public class WorkingST extends BaseTestSelenium {
     private static ProcessesPage processesPage;
     private static TasksPage tasksPage;
 
-    @BeforeClass
-    public static void setup() throws Exception {
+    @Before
+    public void login() throws Exception {
         MockDatabase.stopNode();
         MockDatabase.cleanDatabase();
         MockDatabase.startNode();
         MockDatabase.insertProcessesForWorkflowFull();
-        
+
         currentTasksEditPage = Pages.getCurrentTasksEditPage();
         processesPage = Pages.getProcessesPage();
         tasksPage = Pages.getTasksPage();
-    }
-
-    @Before
-    public void login() throws Exception {
         Pages.getLoginPage().goTo().performLoginAsAdmin();
     }
 
