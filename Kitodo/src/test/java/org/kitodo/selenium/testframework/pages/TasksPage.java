@@ -57,6 +57,7 @@ public class TasksPage extends Page<TasksPage> {
      */
     @Override
     public TasksPage goTo() throws Exception {
+        System.out.println("going to tasks page");
         Pages.getTopNavigation().gotoTasks();
         await("Wait for execution of link click").pollDelay(Browser.getDelayMinAfterLinkClick(), TimeUnit.MILLISECONDS)
                 .atMost(Browser.getDelayMaxAfterLinkClick(), TimeUnit.MILLISECONDS).ignoreExceptions()
@@ -97,14 +98,18 @@ public class TasksPage extends Page<TasksPage> {
 
     public void editOwnedTask(String taskTitle, String processTitle) throws Exception {
         if (isNotAt()) {
+            System.out.println("is not at in taskspage");
             goTo();
         }
+        System.out.println("tasktitle: " + taskTitle + "processtitle: " + processTitle);
         setEditTaskLink(taskTitle, processTitle);
         editTaskLink.click();
     }
 
     private void setEditTaskLink(String taskTitle, String processTitle) {
+        System.out.println("setting editTaskLink");
         int index = getRowIndexForTask(taskTable, taskTitle, processTitle);
+        System.out.println("found index: " + index);
         editTaskLink = Browser.getDriver().findElementById(TASK_TABLE + ":" + index + ":editOwnTask");
     }
 
@@ -114,14 +119,19 @@ public class TasksPage extends Page<TasksPage> {
     }
 
     private int getRowIndexForTask(WebElement dataTable, String searchedTaskTitle, String searchedProcessTitle) {
+        System.out.println("getting rows of table");
         List<WebElement> tableRows = getRowsOfTable(dataTable);
-
+        System.out.println("got rows of table");
         for (int i = 0; i < tableRows.size(); i++) {
             WebElement tableRow = tableRows.get(i);
+            System.out.println("tablerow: " + tableRow + " " + tableRow.getText());
             String taskTitle = Browser.getCellDataByRow(tableRow, 1);
+            System.out.println("title in row: " + taskTitle);
             String processTitle = Browser.getCellDataByRow(tableRow, 2);
+            System.out.println("process in row: " + processTitle);
 
             if (taskTitle.equals(searchedTaskTitle) && processTitle.equals(searchedProcessTitle)) {
+                System.out.println("found the correct row, returning: " + i);
                 return i;
             }
         }
