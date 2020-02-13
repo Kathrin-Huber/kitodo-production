@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -32,6 +33,8 @@ import javax.inject.Named;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.kitodo.api.dataeditor.rulesetmanagement.FunctionalMetadata;
+import org.kitodo.api.dataeditor.rulesetmanagement.RulesetManagementInterface;
 import org.kitodo.config.ConfigCore;
 import org.kitodo.config.enums.ParameterCore;
 import org.kitodo.data.database.beans.Process;
@@ -1302,4 +1305,20 @@ public class ProcessForm extends TemplateBaseForm {
             return 0;
         }
     }
+
+    /**
+     * returns if doctype is marked as periodical in ruleset.
+     *
+     * @param process
+     * @return true, if doctype is periodical.
+     */
+    public boolean isDocTypePeriodical(Process process) {
+        try {
+            return ServiceManager.getProcessService().isDocTypePeriodical(process);
+        } catch (IOException e) {
+            Helper.setErrorMessage(e);
+        }
+        return false;
+    }
+
 }

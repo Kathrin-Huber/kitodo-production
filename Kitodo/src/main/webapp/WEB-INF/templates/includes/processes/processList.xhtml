@@ -91,6 +91,15 @@
                       headerText="#{msgs.actions}">
                 <h:panelGroup layout="block"
                               styleClass="actionsBlock">
+                        <h:link id="createProcessFromPeriodical"
+                                outcome="/pages/processFromTemplate?faces-redirect=true"
+                                styleClass="action"
+                                rendered="#{SecurityAccessController.hasAuthorityToAddProcess() and ProcessForm.isDocTypePeriodical(process)}">
+                            <f:param name="templateId" value="#{process.template.id}"/>
+                            <f:param name="projectId" value="#{process.project.id}"/>
+                            <f:param name="referrer" value="#{'processes'}"/>s
+                            <i class="fa fa-plus-square fa-lg"/>
+                        </h:link>
                     <h:link id="viewProcess"
                             outcome="processEdit"
                             styleClass="action"

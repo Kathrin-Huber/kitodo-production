@@ -855,4 +855,5 @@ public abstract class SearchService<T extends BaseIndexedBean, S extends BaseDTO
             return null;
         }
     }
+
 }

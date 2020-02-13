@@ -13,11 +13,9 @@ package org.kitodo.production.forms.createprocess;
 
 import com.sun.jersey.api.NotFoundException;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
-import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Collections;
@@ -26,7 +24,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import javax.faces.context.FacesContext;
@@ -42,16 +39,14 @@ import org.kitodo.api.MetadataEntry;
 import org.kitodo.api.dataeditor.rulesetmanagement.RulesetManagementInterface;
 import org.kitodo.api.dataeditor.rulesetmanagement.StructuralElementViewInterface;
 import org.kitodo.api.dataformat.Workpiece;
-import org.kitodo.config.ConfigCore;
-import org.kitodo.config.enums.ParameterCore;
 import org.kitodo.data.database.beans.Process;
 import org.kitodo.data.database.beans.Project;
+import org.kitodo.data.database.beans.Ruleset;
 import org.kitodo.data.database.beans.Task;
 import org.kitodo.data.database.beans.Template;
 import org.kitodo.data.database.enums.TaskEditType;
 import org.kitodo.data.database.enums.TaskStatus;
 import org.kitodo.data.exceptions.DataException;
-import org.kitodo.exceptions.DoctypeMissingException;
 import org.kitodo.exceptions.InvalidMetadataValueException;
 import org.kitodo.exceptions.NoSuchMetadataFieldException;
 import org.kitodo.exceptions.ProcessGenerationException;
@@ -103,16 +98,18 @@ public class CreateProcessForm extends BaseForm implements RulesetSetupInterface
 
     /**
      * Update ruleset and docType.
-     * @param rulesetFileName as String
+     * @param ruleset as String
      */
-    public void updateRulesetAndDocType(String rulesetFileName) {
-        setRulesetManagementInterface(rulesetFileName);
+    public void updateRulesetAndDocType(Ruleset ruleset) {
+        String metadataLanguage = ServiceManager.getUserService().getCurrentUser().getMetadataLanguage();
+        priorityList = Locale.LanguageRange.parse(metadataLanguage.isEmpty() ? "en" : metadataLanguage);
+        setRulesetManagementInterface(ruleset);
         processDataTab.setAllDocTypes(getAllRulesetDivisions());
     }
 
-    private void setRulesetManagementInterface(String rulesetFileName) {
+    private void setRulesetManagementInterface(Ruleset ruleset) {
         try {
-            this.rulesetManagementInterface = openRulesetFile(rulesetFileName);
+            this.rulesetManagementInterface = ServiceManager.getRulesetService().openRuleset(ruleset);
         } catch (IOException e) {
             logger.error(e.getLocalizedMessage());
         }
@@ -333,7 +330,7 @@ public class CreateProcessForm extends BaseForm implements RulesetSetupInterface
                         processGenerator.getGeneratedProcess(), new Workpiece())));
                 project = processGenerator.getProject();
                 template = processGenerator.getTemplate();
-                updateRulesetAndDocType(getMainProcess().getRuleset().getFile());
+                updateRulesetAndDocType(getMainProcess().getRuleset());
                 processDataTab.prepare();
             }
         } catch (ProcessGenerationException e) {
@@ -548,18 +545,6 @@ public class CreateProcessForm extends BaseForm implements RulesetSetupInterface
             }
         }
         return true;
-    }
-
-    private RulesetManagementInterface openRulesetFile(String fileName) throws IOException {
-        final long begin = System.nanoTime();
-        String metadataLanguage = ServiceManager.getUserService().getCurrentUser().getMetadataLanguage();
-        priorityList = Locale.LanguageRange.parse(metadataLanguage.isEmpty() ? "en" : metadataLanguage);
-        RulesetManagementInterface ruleset = ServiceManager.getRulesetManagementService().getRulesetManagement();
-        ruleset.load(new File(Paths.get(ConfigCore.getParameter(ParameterCore.DIR_RULESETS), fileName).toString()));
-        if (logger.isTraceEnabled()) {
-            logger.trace("Reading ruleset took {} ms", TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - begin));
-        }
-        return ruleset;
     }
 
     /**

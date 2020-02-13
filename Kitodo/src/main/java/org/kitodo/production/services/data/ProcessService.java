@@ -84,6 +84,8 @@ import org.goobi.production.flow.helper.SearchResultGeneration;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
+import org.kitodo.api.dataeditor.rulesetmanagement.FunctionalMetadata;
+import org.kitodo.api.dataeditor.rulesetmanagement.RulesetManagementInterface;
 import org.kitodo.api.dataformat.IncludedStructuralElement;
 import org.kitodo.api.docket.DocketData;
 import org.kitodo.api.docket.DocketInterface;
@@ -2583,5 +2585,18 @@ public class ProcessService extends ProjectSearchService<Process, ProcessDTO, Pr
         } else {
             webDav.downloadToHome(process, false);
         }
+    }
+
+    /**
+     * returns if doctype is marked as periodical in ruleset.
+     * 
+     * @param process
+     * @return true, if doctype is periodical.
+     */
+    public boolean isDocTypePeriodical(Process process) throws IOException {
+        RulesetManagementInterface rulesetManagementInterface = ServiceManager.getRulesetService()
+                .openRuleset(process.getRuleset());
+        Collection<String> functionalKeys = rulesetManagementInterface.getFunctionalKeys(FunctionalMetadata.PERIODICAL);
+        return functionalKeys.contains(getBaseType(process));
     }
 }

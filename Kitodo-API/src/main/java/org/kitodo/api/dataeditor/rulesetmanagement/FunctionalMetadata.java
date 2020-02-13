@@ -42,6 +42,11 @@ public enum FunctionalMetadata {
     HIGHERLEVEL_IDENTIFIER("higherlevelIdentifier"),
 
     /**
+     * The fact if the metadata is a periodical to short-cut child creation.
+     */
+    PERIODICAL("periodical"),
+
+    /**
      * Key of the record in the source.
      */
     RECORD_IDENTIFIER("recordIdentifier"),
