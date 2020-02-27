@@ -1843,7 +1843,7 @@ public class ProcessService extends ProjectSearchService<Process, ProcessDTO, Pr
 
         // if necessary, create an operation folder
         if (project.isDmsImportCreateProcessFolder()) {
-            targetDirectory = userHome.resolve(File.separator + Helper.getNormalizedTitle(process.getTitle()));
+            targetDirectory = userHome.resolve("/" + Helper.getNormalizedTitle(process.getTitle()));
             boolean created = createOperationDirectory(userHome, process);
             if (!created) {
                 return false;
@@ -1870,16 +1870,16 @@ public class ProcessService extends ProjectSearchService<Process, ProcessDTO, Pr
         if (project.isUseDmsImport()) {
             if (MetadataFormat.findFileFormatsHelperByName(project.getFileFormatDmsExport()) == MetadataFormat.METS) {
                 // if METS, then write by writeMetsFile...
-                writeMetsFile(process, userHome + File.separator + atsPpnBand + ".xml", gdzfile);
+                writeMetsFile(process, userHome + "/" + atsPpnBand + ".xml", gdzfile);
             } else {
                 // ...if not, just write a Fileformat
-                gdzfile.write(userHome + File.separator + atsPpnBand + ".xml");
+                gdzfile.write(userHome + "/" + atsPpnBand + ".xml");
             }
 
             // if necessary, METS and RDF should be written in the export
             if (MetadataFormat
                     .findFileFormatsHelperByName(project.getFileFormatDmsExport()) == MetadataFormat.METS_AND_RDF) {
-                writeMetsFile(process, userHome + File.separator + atsPpnBand + ".mets.xml", gdzfile);
+                writeMetsFile(process, userHome + "/" + atsPpnBand + ".mets.xml", gdzfile);
             }
 
             Helper.setMessage(process.getTitle() + ": ", "DMS-Export started");
@@ -1887,7 +1887,7 @@ public class ProcessService extends ProjectSearchService<Process, ProcessDTO, Pr
             if (!ConfigCore.getBooleanParameterOrDefaultValue(ParameterCore.EXPORT_WITHOUT_TIME_LIMIT)
                     && project.isDmsImportCreateProcessFolder()) {
                 // again remove success folder
-                File successFile = new File(project.getDmsImportRootPath() + File.separator
+                File successFile = new File(project.getDmsImportRootPath() + "/"
                         + Helper.getNormalizedTitle(process.getTitle()));
                 fileService.delete(successFile.toURI());
             }
@@ -1931,7 +1931,7 @@ public class ProcessService extends ProjectSearchService<Process, ProcessDTO, Pr
             return false;
         }
         if (!fileService.fileExist(userHome)) {
-            fileService.createDirectory(userHome, File.separator + Helper.getNormalizedTitle(process.getTitle()));
+            fileService.createDirectory(userHome, "/" + Helper.getNormalizedTitle(process.getTitle()));
         }
         return true;
     }
@@ -1996,7 +1996,7 @@ public class ProcessService extends ProjectSearchService<Process, ProcessDTO, Pr
     private void downloadSources(Process process, URI userHome, String atsPpnBand) throws IOException {
         URI source = fileService.getSourceDirectory(process);
         if (fileService.fileExist(source) && !fileService.getSubUris(source).isEmpty()) {
-            URI destination = userHome.resolve(File.separator + atsPpnBand + "_src");
+            URI destination = userHome.resolve("/" + atsPpnBand + "_src");
             if (!fileService.fileExist(destination)) {
                 fileService.createDirectory(userHome, atsPpnBand + "_src");
             }
@@ -2013,7 +2013,7 @@ public class ProcessService extends ProjectSearchService<Process, ProcessDTO, Pr
                         && fileService.getFileName(directory).contains("_")) {
                     String suffix = fileService.getFileNameWithExtension(directory)
                             .substring(fileService.getFileNameWithExtension(directory).lastIndexOf('_'));
-                    URI destination = userHome.resolve(File.separator + atsPpnBand + suffix);
+                    URI destination = userHome.resolve("/" + atsPpnBand + suffix);
                     if (!fileService.fileExist(destination)) {
                         fileService.createDirectory(userHome, atsPpnBand + suffix);
                     }
@@ -2045,7 +2045,7 @@ public class ProcessService extends ProjectSearchService<Process, ProcessDTO, Pr
 
         // copy the source folder to the destination folder
         if (fileService.fileExist(tifDirectory) && !fileService.getSubUris(tifDirectory).isEmpty()) {
-            URI destination = userHome.resolve(File.separator + atsPpnBand + directorySuffix);
+            URI destination = userHome.resolve("/" + atsPpnBand + directorySuffix);
 
             // with Agora import simply create the folder
             if (project.isUseDmsImport()) {
@@ -2070,7 +2070,7 @@ public class ProcessService extends ProjectSearchService<Process, ProcessDTO, Pr
 
         for (URI file : files) {
             if (fileService.isFile(file)) {
-                URI target = destination.resolve(File.separator + fileService.getFileNameWithExtension(file));
+                URI target = destination.resolve("/" + fileService.getFileNameWithExtension(file));
                 fileService.copyFile(file, target);
             }
         }

@@ -139,7 +139,7 @@ public class SchemaService {
             for (Entry<MediaVariant, URI> mediaFileForMediaVariant : mediaUnit.getMediaFiles().entrySet()) {
                 for (Folder folder : folders) {
                     if (folder.getFileGroup().equals(mediaFileForMediaVariant.getKey().getUse())) {
-                        int lastSeparator = mediaFileForMediaVariant.getValue().toString().lastIndexOf(File.separator);
+                        int lastSeparator = mediaFileForMediaVariant.getValue().toString().lastIndexOf("/");
                         String lastSegment = mediaFileForMediaVariant.getValue().toString()
                                 .substring(lastSeparator + 1);
                         mediaFileForMediaVariant

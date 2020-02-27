@@ -179,8 +179,8 @@ public class VariableReplacer {
     }
 
     private String replaceSeparator(String input) {
-        if (input.endsWith(File.separator)) {
-            input = input.substring(0, input.length() - File.separator.length()).replace("\\", "/");
+        if (input.endsWith("/")) {
+            input = input.substring(0, input.length() - "/".length()).replace("\\", "/");
         }
         return input;
     }

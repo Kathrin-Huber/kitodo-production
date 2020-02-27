@@ -199,11 +199,11 @@ public class KitodoServiceLoader<T> {
                             FacesContext facesContext = FacesContext.getCurrentInstance();
                             HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
 
-                            String filePath = session.getServletContext().getRealPath(File.separator + PAGES_FOLDER)
-                                    + File.separator + moduleName;
+                            String filePath = session.getServletContext().getRealPath("/" + PAGES_FOLDER)
+                                    + "/" + moduleName;
                             FileUtils.deleteDirectory(new File(filePath));
 
-                            String resourceFolder = String.join(File.separator,
+                            String resourceFolder = String.join("/",
                                     Arrays.asList(tempDir.getAbsolutePath(), META_INF_FOLDER, RESOURCES_FOLDER));
                             copyFrontEndFiles(resourceFolder, filePath);
                         }
@@ -274,7 +274,7 @@ public class KitodoServiceLoader<T> {
 
                 if (currentJarEntry.getName().contains(RESOURCES_FOLDER)
                         || currentJarEntry.getName().contains(POM_PROPERTIES_FILE)) {
-                    File resourceFile = new File(destinationFolder + File.separator + currentJarEntry.getName());
+                    File resourceFile = new File(destinationFolder + "/" + currentJarEntry.getName());
                     if (!resourceFile.toPath().normalize().startsWith(destinationFolder.toPath())) {
                         throw new IOException("ZIP file damaged! Invalid entry: " + currentJarEntry.getName());
                     }

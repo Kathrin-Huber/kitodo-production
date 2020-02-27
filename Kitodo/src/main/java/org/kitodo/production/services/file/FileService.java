@@ -226,7 +226,7 @@ public class FileService {
             if (folder.isCreateFolder()) {
                 URI parentFolderUri = processLocationUri;
                 for (String singleFolder : new Subfolder(process, folder).getRelativeDirectoryPath()
-                        .split(Pattern.quote(File.separator))) {
+                        .split(Pattern.quote("/"))) {
                     parentFolderUri = createMetaDirectory(parentFolderUri, singleFolder);
                 }
             }
@@ -721,7 +721,7 @@ public class FileService {
         String directoryPath = temporaryFile.getParentFile().getPath();
         String temporaryFileName = TEMPORARY_FILENAME_PREFIX + temporaryFile.getName();
 
-        return directoryPath + File.separator + temporaryFileName;
+        return directoryPath + "/" + temporaryFileName;
     }
 
     /**
