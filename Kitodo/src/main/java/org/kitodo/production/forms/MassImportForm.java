@@ -13,6 +13,8 @@ package org.kitodo.production.forms;
 
 import java.io.IOException;
 
+import java.text.MessageFormat;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
@@ -39,6 +41,8 @@ public class MassImportForm extends BaseForm {
     private String ppnString;
     private MassImportService massImportService = ServiceManager.getMassImportService();
 
+    private final String processListPath = "/pages/processes.jsf?faces-redirect=true";
+
     public void prepareMassImport(int templateId, int projectId) {
         this.projectId = projectId;
         this.templateId = templateId;
@@ -54,6 +58,9 @@ public class MassImportForm extends BaseForm {
         UploadedFile file = event.getFile();
         try {
             massImportService.importFromCSV(selectedCatalog, file, projectId, templateId);
+            FacesContext context = FacesContext.getCurrentInstance();
+            String path = context.getExternalContext().getRequestContextPath() + processListPath;
+            context.getExternalContext().redirect(path);
         } catch (IOException e) {
             Helper.setErrorMessage(Helper.getTranslation("errorReading", file.getFileName()));
         } catch (ImportException e) {
@@ -64,12 +71,14 @@ public class MassImportForm extends BaseForm {
     /**
      * Import processes from textField.
      */
-    public void importFromText() {
+    public String importFromText() {
         try {
             massImportService.importFromText(selectedCatalog, ppnString, projectId, templateId);
+            return processListPath;
         } catch (ImportException e) {
             Helper.setErrorMessage(e.getLocalizedMessage(), logger, e);
         }
+        return stayOnCurrentPage;
     }
 
     /**
