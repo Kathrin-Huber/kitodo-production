@@ -65,6 +65,7 @@ public class WorkingST extends BaseTestSelenium {
         }
     }
 
+    @Ignore
     @Test
     public void takeOpenTaskAndGiveItBackTest() throws Exception {
         Task task = ServiceManager.getTaskService().getById(9);
@@ -99,6 +100,7 @@ public class WorkingST extends BaseTestSelenium {
         assertEquals("Task was not closed!", TaskStatus.DONE, task.getProcessingStatus());
     }
 
+    @Ignore
     @Test
     public void editOwnedTaskAndTakeNextForParallelWorkflowTest() throws Exception {
         assumeTrue(!SystemUtils.IS_OS_WINDOWS && !SystemUtils.IS_OS_MAC);
@@ -158,6 +160,7 @@ public class WorkingST extends BaseTestSelenium {
         assertTrue("Redirection after click edit metadata was not successful", Pages.getMetadataEditorPage().isAt());
     }
 
+    @Ignore
     @Test
     public void downloadSearchResultAsExcelTest() throws Exception {
         processesPage.goTo().downloadSearchResultAsExcel();
