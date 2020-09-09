@@ -19,6 +19,7 @@ import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.MonthDay;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -696,7 +697,8 @@ public class CalendarForm implements Serializable {
      */
     public void setYearStart(Date date) {
         if (Objects.nonNull(date)) {
-            course.setYearStart(MonthDay.of(date.getMonth() + 1, date.getDate()));
+            LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            course.setYearStart(MonthDay.of(localDate.getMonthValue() + 1, localDate.getDayOfMonth()));
         }
     }
 

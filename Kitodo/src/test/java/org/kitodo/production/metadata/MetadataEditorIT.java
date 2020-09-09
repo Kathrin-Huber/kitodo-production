@@ -16,6 +16,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -67,12 +68,12 @@ public class MetadataEditorIT {
     @Test
     public void shouldAddLink() throws Exception {
         File metaXmlFile = new File("src/test/resources/metadata/4/meta.xml");
-        List<String> metaXmlContentBefore = FileUtils.readLines(metaXmlFile, StandardCharsets.UTF_8);
+        List<String> metaXmlContentBefore = Files.readAllLines(metaXmlFile.toPath(), StandardCharsets.UTF_8);
 
         MetadataEditor.addLink(ServiceManager.getProcessService().getById(4), "0", 7);
 
         assertTrue("The link was not added correctly!",
-            isInternalMetsLink(FileUtils.readLines(metaXmlFile, StandardCharsets.UTF_8).get(35), 7));
+            isInternalMetsLink(Files.readAllLines(metaXmlFile.toPath(), StandardCharsets.UTF_8).get(35), 7));
 
         FileUtils.writeLines(metaXmlFile, StandardCharsets.UTF_8.toString(), metaXmlContentBefore);
         FileUtils.deleteQuietly(new File("src/test/resources/metadata/4/meta.xml.1"));

@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -491,8 +492,10 @@ public class Block {
      */
     public void setFirstAppearanceDate(Date firstAppearance) {
         if (Objects.nonNull(firstAppearance)) {
-            firstAppearance.setHours(5);
-            setFirstAppearance(firstAppearance.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(firstAppearance);
+            calendar.set(Calendar.HOUR_OF_DAY,5);
+            setFirstAppearance(calendar.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         }
     }
 
