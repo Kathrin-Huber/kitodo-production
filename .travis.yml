@@ -11,6 +11,7 @@ dist: xenial
 
 jdk:
   - openjdk8
+  - oraclejdk11
 
 addons:
   chrome: stable
