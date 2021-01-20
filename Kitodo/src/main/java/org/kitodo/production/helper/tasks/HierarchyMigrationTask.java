@@ -228,11 +228,11 @@ public class HierarchyMigrationTask extends EmptyTask {
      *         current number of the child process
      */
     private List<Integer> createParentProcess(Process childProcess)
-            throws ProcessGenerationException, IOException, DataException, CommandException {
+            throws ProcessGenerationException, IOException, CommandException, DAOException {
 
         processGenerator.generateProcess(childProcess.getTemplate().getId(), childProcess.getProject().getId());
         Process parentProcess = processGenerator.getGeneratedProcess();
-        processService.save(parentProcess);
+        processService.saveToDatabase(parentProcess);
         fileService.createProcessLocation(parentProcess);
         createParentMetsFile(childProcess);
         ArrayList<Integer> parentData = new ArrayList<>();
@@ -253,11 +253,11 @@ public class HierarchyMigrationTask extends EmptyTask {
      *            child process to link
      */
     private static void linkParentProcessWithChildProcess(Process parentProcess, Process childProcess)
-            throws DataException {
+            throws DAOException {
 
         parentProcess.getChildren().add(childProcess);
         childProcess.setParent(parentProcess);
-        processService.save(childProcess);
+        processService.saveToDatabase(childProcess);
     }
 
     /**
